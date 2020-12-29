@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context="com.ibrahim.exchangerate.ExchangeRateFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/etBaseValue"
+            android:layout_width="0dp"
+            android:layout_height="?android:listPreferredItemHeight"
+            android:autofillHints="@string/amount"
+            android:backgroundTint="@android:color/transparent"
+            android:gravity="start|center_vertical"
+            android:hint="@string/amount"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintEnd_toStartOf="@id/tvBaseName"
+            app:layout_constraintHorizontal_weight="4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="982.545" />
+
+        <TextView
+            android:id="@+id/tvBaseName"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@id/etBaseValue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/etBaseValue"
+            app:layout_constraintTop_toTopOf="@id/etBaseValue"
+            tools:text="EUR" />
+
+        <View
+            android:id="@+id/viewBaseDivider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etBaseValue" />
+
+        <TextView
+            android:id="@+id/tvTargetValue"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            android:layout_width="0dp"
+            android:layout_height="?android:listPreferredItemHeight"
+            android:gravity="start|center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintEnd_toStartOf="@id/tvBaseName"
+            app:layout_constraintHorizontal_weight="4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewBaseDivider"
+            tools:text="112.665" />
+
+        <TextView
+            android:id="@+id/tvTargetName"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@id/tvTargetValue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/tvTargetValue"
+            app:layout_constraintTop_toTopOf="@id/tvTargetValue"
+            tools:text="EUR" />
+
+        <View
+            android:id="@+id/viewTargetDivider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTargetValue" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

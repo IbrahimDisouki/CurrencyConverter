@@ -1,0 +1,78 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+
+    //region Test dependencies
+    testImplementation "junit:junit:$junit"
+    androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunit"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspresso"
+    //endregion
+
+    //region kotlin
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    //endregion
+
+    //region Core-ktx
+    api "androidx.core:core-ktx:$androidxCoreKtx"
+    //endregion
+
+    //region AppCompat
+    api "androidx.appcompat:appcompat:$androidxAppcompat"
+    //endregion
+
+    //region Material Design
+    api "com.google.android.material:material:$androidMaterial"
+    //endregion
+
+    //region ConstraintLayout
+    api "androidx.constraintlayout:constraintlayout:$androidxConstraintlayout"
+    //endregion
+
+    //region Navigation
+    api "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    api "androidx.navigation:navigation-ui-ktx:$nav_version"
+    api "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+    //endregion
+
+    //region Lifecycle
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+    api "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle"
+    api "androidx.lifecycle:lifecycle-common-java8:$lifecycle"
+    //endregion
+
+    //region Coroutines
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
+    //endregion
+
+    //region Timber
+    api "com.jakewharton.timber:timber:$timber"
+    //endregion
+}
