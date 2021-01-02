@@ -124,8 +124,10 @@ class HomeFragment : Fragment() {
     private fun onLatestExchangeRateSuccess(exchangeRates: ExchangeRates) {
         Timber.i("latestExchangeRate: ${exchangeRates.exchangeRates.size}")
         requireActivity().title = exchangeRates.base
-        adapter.items.addAll(exchangeRates.exchangeRates)
-        adapter.notifyDataSetChanged()
+        if (adapter.items.isNullOrEmpty()) {
+            adapter.items.addAll(exchangeRates.exchangeRates)
+            adapter.notifyDataSetChanged()
+        }
     }
 
     private fun onLatestExchangeRateFailure(failure: Failure) {
@@ -144,6 +146,21 @@ class HomeFragment : Fragment() {
                 viewModel dispatch HomeIntent.GetLatestExchangeRate
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Timber.i("onDestroyView")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Timber.i("onDetach")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.i("onDestroy")
     }
 
 }
