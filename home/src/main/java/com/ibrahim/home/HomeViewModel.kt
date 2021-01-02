@@ -8,6 +8,7 @@ import com.ibrahim.core.None
 import com.ibrahim.core.exhaustive
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 
 @ExperimentalCoroutinesApi
 class HomeViewModel @ViewModelInject constructor(
@@ -38,6 +39,11 @@ class HomeViewModel @ViewModelInject constructor(
                 HomeState.ExchangeRateFailure(result.failure)
             }
         }.exhaustive
+    }
+
+    override fun onCleared() {
+        Timber.i("HomeViewModel: onCleared()")
+        super.onCleared()
     }
 
 }
