@@ -22,6 +22,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -132,9 +133,24 @@ class HomeFragment : Fragment() {
 
     private fun onLatestExchangeRateFailure(failure: Failure) {
         Timber.i("latestExchangeRateFailure: $failure")
+        var errorMessage: String = getString(R.string.something_went_wrong_please_try_again_later)
+        when (failure) {
+            is Failure.NetworkConnection -> {
+                errorMessage =
+                    if (failure.throwable is SocketTimeoutException)
+                        getString(R.string.looks_like_the_server_is_taking_too_long_to_respond_please_try_again_later)
+                    else
+                        getString(R.string.no_internet_connection)
+            }
+            is Failure.ServerError -> {
+                errorMessage = getString(R.string.no_internet_connection)
+            }
+            is Failure.FeatureFailure -> {
+            }
+        }
         Toast.makeText(
             requireContext(),
-            failure.localizedMessage ?: "Something went wrong, please try again later!",
+            errorMessage,
             Toast.LENGTH_SHORT
         ).show()
     }

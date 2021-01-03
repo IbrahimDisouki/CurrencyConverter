@@ -21,7 +21,7 @@ class HomeViewModel @ViewModelInject constructor(
         when (intent) {
             is HomeIntent.GetLatestExchangeRate -> {
                 latestExchangeRateUseCase.execute(None()).collect {
-                    mutableState.value = reduce(it)
+                    updateState(it)
                 }
             }
         }.exhaustive

@@ -39,6 +39,7 @@ ext {
     androidMaterial = '1.2.1'
     androidxConstraintlayout = '2.0.4'
     junit = '4.13.1'
+    truth = '1.1'
     androidxTestExtJunit = '1.1.2'
     androidxTestEspresso = '3.3.0'
     annotation = '1.1.0'

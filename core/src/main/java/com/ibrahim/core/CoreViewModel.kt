@@ -16,7 +16,7 @@ abstract class CoreViewModel<I : CoreIntent, R : CoreResult, S : CoreState>(init
 
     private val intentChannel = Channel<I>(Channel.UNLIMITED)
 
-    protected val mutableState = MutableStateFlow(initialState)
+    private val mutableState = MutableStateFlow(initialState)
     val state: StateFlow<S>
         get() = mutableState
 
@@ -35,5 +35,9 @@ abstract class CoreViewModel<I : CoreIntent, R : CoreResult, S : CoreState>(init
     abstract suspend fun handleIntent(intent: I)
 
     protected abstract fun reduce(result: R): S
+
+    protected fun updateState(result: R) {
+        mutableState.value = reduce(result)
+    }
 
 }

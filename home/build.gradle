@@ -33,6 +33,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation project(":app")
     testImplementation "junit:junit:$junit"
+    testImplementation "com.google.truth:truth:$truth"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspresso"
     androidTestImplementation "androidx.annotation:annotation:$annotation"
