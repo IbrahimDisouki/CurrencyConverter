@@ -18,8 +18,8 @@ import java.net.UnknownHostException
 class HomeRepositoryTest {
 
     private val testDispatcher = TestCoroutineDispatcher()
-    private val homeRemoteDataSource = mock<IHomeRemoteDataSource>()
-    private val repository = HomeRepository(testDispatcher, homeRemoteDataSource)
+    private val remoteDataSource = mock<IHomeRemoteDataSource>()
+    private val repository = HomeRepository(testDispatcher, remoteDataSource)
 
     @Test
     fun getLatestExchangeRate_whenServerRespondWithSuccess_returnExchangeRates() = runBlockingTest {
@@ -34,7 +34,7 @@ class HomeRepositoryTest {
 
 
         // Mock API Service
-        homeRemoteDataSource.stub {
+        remoteDataSource.stub {
             onBlocking {
                 getLatestExchangeRate()
             } doReturn LatestExchangeRateResponse(
@@ -68,7 +68,7 @@ class HomeRepositoryTest {
             )
         )
         // Mock API Service
-        homeRemoteDataSource.stub {
+        remoteDataSource.stub {
             onBlocking { getLatestExchangeRate() } doReturn LatestExchangeRateResponse(
                 success = false,
                 error = Error(
@@ -97,7 +97,7 @@ class HomeRepositoryTest {
                 HomeResult.ExchangeRateFailure(Failure.NetworkConnection(UnknownHostException()))
             )
             // Mock API Service
-            homeRemoteDataSource.stub {
+            remoteDataSource.stub {
                 onBlocking { throw UnknownHostException() }
             }
 
@@ -119,7 +119,7 @@ class HomeRepositoryTest {
                 HomeResult.ExchangeRateFailure(Failure.NetworkConnection(SocketTimeoutException()))
             )
             // Mock API Service
-            homeRemoteDataSource.stub {
+            remoteDataSource.stub {
                 onBlocking { throw SocketTimeoutException() }
             }
 
