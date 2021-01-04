@@ -4,10 +4,12 @@ import com.google.common.truth.Truth
 import com.ibrahim.core.Failure
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.stub
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -15,8 +17,12 @@ import java.net.UnknownHostException
 @ExperimentalCoroutinesApi
 class HomeRepositoryTest {
 
+    private val testDispatcher = TestCoroutineDispatcher()
+    private val homeRemoteDataSource = mock<IHomeRemoteDataSource>()
+    private val repository = HomeRepository(testDispatcher, homeRemoteDataSource)
+
     @Test
-    fun getLatestExchangeRate_whenServerRespondWithSuccess_returnExchangeRates() = runBlocking {
+    fun getLatestExchangeRate_whenServerRespondWithSuccess_returnExchangeRates() = runBlockingTest {
         val expectedResults = listOf(
             HomeResult.Loading, HomeResult.ExchangeRateSuccess(
                 ExchangeRates(
@@ -25,9 +31,13 @@ class HomeRepositoryTest {
                 )
             )
         )
+
+
         // Mock API Service
-        val apiService = mock<IHomeRemoteDataSource>() {
-            onBlocking { getLatestExchangeRate() } doReturn LatestExchangeRateResponse(
+        homeRemoteDataSource.stub {
+            onBlocking {
+                getLatestExchangeRate()
+            } doReturn LatestExchangeRateResponse(
                 true,
                 1609670046,
                 "EUR",
@@ -35,8 +45,6 @@ class HomeRepositoryTest {
                 mapOf(Pair("AED", 4.457433))
             )
         }
-
-        val repository = HomeRepository(apiService)
 
         val actualResults: MutableList<HomeResult> = mutableListOf()
         val flow: Flow<HomeResult> = repository.getLatestExchangeRate()
@@ -49,7 +57,7 @@ class HomeRepositoryTest {
     }
 
     @Test
-    fun getLatestExchangeRate_whenServerRespondWithFailure_returnServerError() = runBlocking {
+    fun getLatestExchangeRate_whenServerRespondWithFailure_returnServerError() = runBlockingTest {
         val expectedResults = listOf(
             HomeResult.Loading, HomeResult.ExchangeRateFailure(
                 Failure.ServerError(
@@ -60,7 +68,7 @@ class HomeRepositoryTest {
             )
         )
         // Mock API Service
-        val apiService = mock<IHomeRemoteDataSource>() {
+        homeRemoteDataSource.stub {
             onBlocking { getLatestExchangeRate() } doReturn LatestExchangeRateResponse(
                 success = false,
                 error = Error(
@@ -70,8 +78,6 @@ class HomeRepositoryTest {
                 )
             )
         }
-
-        val repository = HomeRepository(apiService)
 
         val actualResults: MutableList<HomeResult> = mutableListOf()
         val flow: Flow<HomeResult> = repository.getLatestExchangeRate()
@@ -84,49 +90,47 @@ class HomeRepositoryTest {
     }
 
     @Test(expected = UnknownHostException::class)
-    fun getLatestExchangeRate_whenNoInternetConnection_returnUnknownHostException() = runBlocking {
-        val expectedResults = listOf(
-            HomeResult.Loading,
-            HomeResult.ExchangeRateFailure(Failure.NetworkConnection(UnknownHostException()))
-        )
-        // Mock API Service
-        val apiService = mock<IHomeRemoteDataSource>() {
-            onBlocking { throw UnknownHostException() }
+    fun getLatestExchangeRate_whenNoInternetConnection_returnUnknownHostException() =
+        runBlockingTest {
+            val expectedResults = listOf(
+                HomeResult.Loading,
+                HomeResult.ExchangeRateFailure(Failure.NetworkConnection(UnknownHostException()))
+            )
+            // Mock API Service
+            homeRemoteDataSource.stub {
+                onBlocking { throw UnknownHostException() }
+            }
+
+            val actualResults: MutableList<HomeResult> = mutableListOf()
+            val flow: Flow<HomeResult> = repository.getLatestExchangeRate()
+            flow.collect { data ->
+                actualResults.add(data)
+            }
+
+            Truth.assertThat(actualResults).isEqualTo(expectedResults)
+
         }
-
-        val repository = HomeRepository(apiService)
-
-        val actualResults: MutableList<HomeResult> = mutableListOf()
-        val flow: Flow<HomeResult> = repository.getLatestExchangeRate()
-        flow.collect { data ->
-            actualResults.add(data)
-        }
-
-        Truth.assertThat(actualResults).isEqualTo(expectedResults)
-
-    }
 
     @Test(expected = SocketTimeoutException::class)
-    fun getLatestExchangeRate_whenConnectionTimeout_returnSocketTimeoutException() = runBlocking {
-        val expectedResults = listOf(
-            HomeResult.Loading,
-            HomeResult.ExchangeRateFailure(Failure.NetworkConnection(SocketTimeoutException()))
-        )
-        // Mock API Service
-        val apiService = mock<IHomeRemoteDataSource>() {
-            onBlocking { throw SocketTimeoutException() }
+    fun getLatestExchangeRate_whenConnectionTimeout_returnSocketTimeoutException() =
+        runBlockingTest {
+            val expectedResults = listOf(
+                HomeResult.Loading,
+                HomeResult.ExchangeRateFailure(Failure.NetworkConnection(SocketTimeoutException()))
+            )
+            // Mock API Service
+            homeRemoteDataSource.stub {
+                onBlocking { throw SocketTimeoutException() }
+            }
+
+            val actualResults: MutableList<HomeResult> = mutableListOf()
+            val flow: Flow<HomeResult> = repository.getLatestExchangeRate()
+            flow.collect { data ->
+                actualResults.add(data)
+            }
+
+            Truth.assertThat(actualResults).isEqualTo(expectedResults)
+
         }
-
-        val repository = HomeRepository(apiService)
-
-        val actualResults: MutableList<HomeResult> = mutableListOf()
-        val flow: Flow<HomeResult> = repository.getLatestExchangeRate()
-        flow.collect { data ->
-            actualResults.add(data)
-        }
-
-        Truth.assertThat(actualResults).isEqualTo(expectedResults)
-
-    }
 
 }

@@ -1,6 +1,8 @@
 package com.ibrahim.home
 
 import com.ibrahim.core.Failure
+import com.ibrahim.currencyconverter.di.DispatchersIO
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -10,9 +12,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
-class HomeRepository @Inject constructor(private val remoteDataSource: IHomeRemoteDataSource) :
+class HomeRepository @Inject constructor(
+    @DispatchersIO private val dispatcher: CoroutineDispatcher,
+    private val remoteDataSource: IHomeRemoteDataSource
+) :
     IHomeRepository {
     override fun getLatestExchangeRate(): Flow<HomeResult> {
+        Dispatchers.IO
         return flow {
             emit(HomeResult.Loading)
             try {
@@ -47,6 +53,6 @@ class HomeRepository @Inject constructor(private val remoteDataSource: IHomeRemo
                 emit(HomeResult.ExchangeRateFailure(Failure.NetworkConnection(exception)))
             }
 
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
     }
 }
