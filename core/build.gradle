@@ -35,10 +35,6 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspresso"
     //endregion
 
-    //region kotlin
-    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    //endregion
-
     //region Core-ktx
     api "androidx.core:core-ktx:$androidxCoreKtx"
     //endregion
@@ -74,5 +70,11 @@ dependencies {
 
     //region Timber
     api "com.jakewharton.timber:timber:$timber"
+    //endregion
+
+    //region Firebase
+    api platform("com.google.firebase:firebase-bom:$firebaseBom")
+    api 'com.google.firebase:firebase-analytics-ktx'
+    api 'com.google.firebase:firebase-crashlytics-ktx'
     //endregion
 }
