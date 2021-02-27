@@ -4,8 +4,11 @@ import com.ibrahim.core.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
-import okhttp3.*
+import dagger.hilt.components.SingletonComponent
+import okhttp3.HttpUrl
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
@@ -13,7 +16,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 object AppModule {
 
     @Provides
@@ -33,18 +36,16 @@ object AppModule {
     @Provides
     @Singleton
     fun provideApiAccessKeyInterceptor(): Interceptor {
-        return object : Interceptor {
-            override fun intercept(chain: Interceptor.Chain): Response {
-                val original: Request = chain.request()
-                val originalHttpUrl: HttpUrl = original.url
-                val url = originalHttpUrl.newBuilder()
-                    .addQueryParameter("access_key", "20d9fde9b076c2c7034e156ce7b009d4")
-                    .build()
-                val requestBuilder: Request.Builder = original.newBuilder()
-                    .url(url)
-                val request: Request = requestBuilder.build()
-                return chain.proceed(request)
-            }
+        return Interceptor { chain ->
+            val original: Request = chain.request()
+            val originalHttpUrl: HttpUrl = original.url
+            val url = originalHttpUrl.newBuilder()
+                .addQueryParameter("access_key", "20d9fde9b076c2c7034e156ce7b009d4")
+                .build()
+            val requestBuilder: Request.Builder = original.newBuilder()
+                .url(url)
+            val request: Request = requestBuilder.build()
+            chain.proceed(request)
         }
     }
 
