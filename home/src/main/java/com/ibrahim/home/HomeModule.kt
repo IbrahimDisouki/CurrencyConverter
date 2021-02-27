@@ -1,31 +1,27 @@
 package com.ibrahim.home
 
-import com.ibrahim.currencyconverter.di.AppModule
-import com.ibrahim.currencyconverter.di.FragmentViewModelModule
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.ibrahim.currencyconverter.di.BaseViewModelFactory
+import com.ibrahim.currencyconverter.di.ViewModelKey
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
-import retrofit2.Retrofit
+import dagger.hilt.migration.DisableInstallInCheck
+import dagger.multibindings.IntoMap
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@Module(
-    includes = [
-        HomeViewModel_HiltModule::class,
-        FragmentViewModelModule::class,
-        AppModule::class
-    ]
-)
-@InstallIn(FragmentComponent::class)
-object HomeModule {
+@Module
+@DisableInstallInCheck
+abstract class HomeModule {
+    @ExperimentalCoroutinesApi
+    @Binds
+    @IntoMap
+    @ViewModelKey(HomeViewModel::class)
+    abstract fun bindHomeViewModel(viewModel: HomeViewModel): ViewModel
 
-    @Provides
-    fun provideHomeRemoteDataSource(retrofit: Retrofit): IHomeRemoteDataSource {
-        return retrofit.create(IHomeRemoteDataSource::class.java)
-    }
+    @Binds
+    abstract fun bindViewModelFactory(factory: BaseViewModelFactory): ViewModelProvider.Factory
 
-    @Provides
-    fun provideHomeRepository(repository: HomeRepository): IHomeRepository {
-        return repository
-    }
-
+    @Binds
+    abstract fun bindHomeRepository(repository: HomeRepository): IHomeRepository
 }

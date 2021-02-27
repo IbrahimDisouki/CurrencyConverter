@@ -1,6 +1,6 @@
 package com.ibrahim.home
 
-import androidx.fragment.app.Fragment
+import android.content.Context
 import com.ibrahim.currencyconverter.di.AppDependencies
 import dagger.BindsInstance
 import dagger.Component
@@ -8,20 +8,20 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Singleton
 
 @Singleton
-@Component(dependencies = [AppDependencies::class], modules = [HomeModule::class])
+@Component(
+    dependencies = [AppDependencies::class],
+    modules = [HomeModule::class, HomeNetworkModule::class]
+)
 interface HomeComponent {
 
     @ExperimentalCoroutinesApi
     fun inject(fragment: HomeFragment)
 
-    fun fragment(): Fragment
-
-    @Component.Factory
-    interface Factory {
-        fun homeComponent(
-            @BindsInstance fragment: Fragment,
-            appDependencies: AppDependencies
-        ): HomeComponent
+    @Component.Builder
+    interface Builder {
+        fun context(@BindsInstance context: Context): Builder
+        fun appDependencies(appDependencies: AppDependencies): Builder
+        fun build(): HomeComponent
     }
 
 }

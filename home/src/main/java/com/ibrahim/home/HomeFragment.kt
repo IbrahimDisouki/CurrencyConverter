@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.ibrahim.core.Failure
 import com.ibrahim.core.exhaustive
 import com.ibrahim.currencyconverter.di.AppDependencies
-import com.ibrahim.currencyconverter.di.DFMSavedStateViewModelFactory
 import com.ibrahim.currencyconverter.exchangerate.ExchangeRateData
 import com.ibrahim.home.databinding.FragmentHomeBinding
 import dagger.hilt.android.EntryPointAccessors
@@ -34,9 +34,9 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     @Inject
-    lateinit var savedStateViewModelFactory: DFMSavedStateViewModelFactory
+    lateinit var factory: ViewModelProvider.Factory
 
-    private val viewModel by viewModels<HomeViewModel> { savedStateViewModelFactory }
+    private val viewModel by viewModels<HomeViewModel> { factory }
 
     private val adapter: ExchangeRatesAdapter by lazy {
         ExchangeRatesAdapter {
@@ -60,14 +60,15 @@ class HomeFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        DaggerHomeComponent.factory()
-            .homeComponent(
-                this,
+        DaggerHomeComponent.builder()
+            .context(context)
+            .appDependencies(
                 EntryPointAccessors.fromApplication(
-                    requireContext().applicationContext,
+                    context.applicationContext,
                     AppDependencies::class.java
                 )
-            ).inject(this)
+            ).build()
+            .inject(this)
     }
 
     override fun onCreateView(
@@ -97,6 +98,11 @@ class HomeFragment : Fragment() {
             }
         }
 
+        if (viewModel.state.value !is HomeState.ExchangeRateSuccess) {
+            lifecycleScope.launch {
+                viewModel dispatch HomeIntent.GetLatestExchangeRate
+            }
+        }
     }
 
     private fun render(state: HomeState) {
@@ -137,15 +143,6 @@ class HomeFragment : Fragment() {
             failure.localizedMessage ?: "Something went wrong, please try again later!",
             Toast.LENGTH_SHORT
         ).show()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        if (viewModel.state.value !is HomeState.ExchangeRateSuccess) {
-            lifecycleScope.launch {
-                viewModel dispatch HomeIntent.GetLatestExchangeRate
-            }
-        }
     }
 
     override fun onDestroyView() {
