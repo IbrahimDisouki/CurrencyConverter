@@ -51,8 +51,5 @@ ext {
     hiltJetpack = "1.0.0-alpha03"
     coroutines = '1.4.1'
     coroutinesTest = '1.4.2'
-    loggingInterceptor = '4.8.0'
-    lifecycle = "2.2.0"
-    hiltJetpack = "1.0.0-alpha02"
     timber = '4.7.1'
 }
