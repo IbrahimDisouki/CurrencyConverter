@@ -5,6 +5,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -18,6 +20,20 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    @DispatchersIO
+    fun provideDispatchersIO(): CoroutineDispatcher {
+        return Dispatchers.IO
+    }
+
+    @Provides
+    @Singleton
+    @DispatchersMain
+    fun provideDispatchersMain(): CoroutineDispatcher {
+        return Dispatchers.Default
+    }
 
     @Provides
     @Singleton

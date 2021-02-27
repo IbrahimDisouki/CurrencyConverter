@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_internet_connection">No internet connection!</string>
+    <string name="looks_like_the_server_is_taking_too_long_to_respond_please_try_again_later">Looks like the server is taking too long to respond, please try again later!</string>
+    <string name="something_went_wrong_please_try_again_later">Something went wrong, please try again later!</string>
+</resources>

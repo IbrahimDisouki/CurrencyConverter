@@ -33,6 +33,9 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation project(":app")
     testImplementation "junit:junit:$junit"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlin"
+    testImplementation "com.google.truth:truth:$truth"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTest"
     androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspresso"
     androidTestImplementation "androidx.annotation:annotation:$annotation"

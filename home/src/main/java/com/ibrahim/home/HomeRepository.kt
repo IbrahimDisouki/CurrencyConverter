@@ -1,17 +1,24 @@
 package com.ibrahim.home
 
 import com.ibrahim.core.Failure
+import com.ibrahim.currencyconverter.di.DispatchersIO
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import timber.log.Timber
 import javax.inject.Inject
 
-class HomeRepository @Inject constructor(private val remoteDataSource: IHomeRemoteDataSource) :
+@ExperimentalCoroutinesApi
+class HomeRepository @Inject constructor(
+    @DispatchersIO private val dispatcher: CoroutineDispatcher,
+    private val remoteDataSource: IHomeRemoteDataSource
+) :
     IHomeRepository {
-    @ExperimentalCoroutinesApi
     override fun getLatestExchangeRate(): Flow<HomeResult> {
+        Dispatchers.IO
         return flow {
             emit(HomeResult.Loading)
             try {
@@ -31,12 +38,21 @@ class HomeRepository @Inject constructor(private val remoteDataSource: IHomeRemo
                             )
                         )
                     }
-                    false -> emit(HomeResult.ExchangeRateFailure(Failure.ServerError))
+                    false -> emit(
+                        HomeResult.ExchangeRateFailure(
+                            Failure.ServerError(
+                                response.error?.code,
+                                response.error?.type,
+                                response.error?.info
+                            )
+                        )
+                    )
                 }
             } catch (exception: Throwable) {
-                emit(HomeResult.ExchangeRateFailure(Failure.NetworkConnection))
+                Timber.i(exception.localizedMessage)
+                emit(HomeResult.ExchangeRateFailure(Failure.NetworkConnection(exception)))
             }
 
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
     }
 }
