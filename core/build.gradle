@@ -20,7 +20,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -70,11 +70,5 @@ dependencies {
 
     //region Timber
     api "com.jakewharton.timber:timber:$timber"
-    //endregion
-
-    //region Firebase
-    api platform("com.google.firebase:firebase-bom:$firebaseBom")
-    api 'com.google.firebase:firebase-analytics-ktx'
-    api 'com.google.firebase:firebase-crashlytics-ktx'
     //endregion
 }
