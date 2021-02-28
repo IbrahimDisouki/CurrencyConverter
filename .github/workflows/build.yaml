@@ -8,5 +8,12 @@ jobs:
         uses: actions/checkout@v2
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-      - name: Build the app
-        run: ./gradlew build
+      - name: Sign AAB
+        id: sign
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: app/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
