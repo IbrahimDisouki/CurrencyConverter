@@ -20,7 +20,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -33,10 +33,6 @@ dependencies {
     testImplementation "junit:junit:$junit"
     androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspresso"
-    //endregion
-
-    //region kotlin
-    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     //endregion
 
     //region Core-ktx

@@ -1,7 +1,9 @@
 package com.ibrahim.home
 
+import androidx.annotation.Keep
 import com.fasterxml.jackson.annotation.JsonProperty
 
+@Keep
 data class LatestExchangeRateResponse(
     @JsonProperty("success")
     val success: Boolean? = null,
@@ -17,6 +19,7 @@ data class LatestExchangeRateResponse(
     val error: Error? = null
 )
 
+@Keep
 data class Error(
     @JsonProperty("code")
     val code: Int? = null,

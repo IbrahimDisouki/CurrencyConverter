@@ -12,8 +12,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @Module
 @DisableInstallInCheck
+@ExperimentalCoroutinesApi
 abstract class HomeModule {
-    @ExperimentalCoroutinesApi
     @Binds
     @IntoMap
     @ViewModelKey(HomeViewModel::class)

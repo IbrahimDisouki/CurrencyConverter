@@ -1,5 +1,7 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
@@ -23,7 +25,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -59,5 +61,11 @@ dependencies {
     api "com.squareup.retrofit2:retrofit:$retrofit"
     api "com.squareup.retrofit2:converter-jackson:$jacksonConverter"
     implementation "com.squareup.okhttp3:logging-interceptor:$loggingInterceptor"
+    //endregion
+
+    //region Firebase
+    api platform("com.google.firebase:firebase-bom:$firebaseBom")
+    api 'com.google.firebase:firebase-analytics-ktx'
+    api 'com.google.firebase:firebase-crashlytics-ktx'
     //endregion
 }
